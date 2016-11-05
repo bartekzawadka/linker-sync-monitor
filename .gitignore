@@ -36,4 +36,8 @@ jspm_packages
 # Optional REPL history
 .node_repl_history
 
+# Idea folder
 .idea
+
+# CSS files (LESS engine added)
+*.css
