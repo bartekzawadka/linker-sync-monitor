@@ -23,6 +23,9 @@ app.use(cookieParser());
 app.use(require('less-middleware')(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Node modules:
+app.use('/modules', express.static(path.join(__dirname, 'node_modules')));
+
 app.use('/', routes);
 //app.use('/users', users);
 
