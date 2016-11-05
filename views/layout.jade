@@ -5,7 +5,11 @@ html(ng-app="LinkerSyncMonitor")
         link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
     body
-        block content
+        md-toolbar(md-scroll-shrink layout="row" layout-align="left center" md-colors="{background: 'blue-grey-50'}" class='toolbar')
+            img(id='logo-image', src='/images/logo.png' width=35)
+            .logo Linker sync log viewer
+        md-content(flex, class='content')
+            block content
 
         script(src='/modules/jquery/dist/jquery.js')
         script(src='/modules/angular/angular.js')
