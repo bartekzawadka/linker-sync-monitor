@@ -2,11 +2,29 @@ extends layout
 
 block content
   div(ng-controller="SessionsListCtrl")
-    md-list(flex)
+    md-list
       md-list-item(class="md-3-line" ng-repeat="item in sessions" ng-click="null")
         div(class="md-list-item-text" layout="column")
-          h3 Status: UNKNOWN
-          p Started at: {{item.startedAt}}
-          p Ended at: {{item.endedAt}}
-    div(layout="row" layout-align="center center")
-      md-progress-circular(ng-show="isLoading" md-mode="indeterminate" md-diameter="96")
+          div(class="md-secondary" layout="row" layout-align="center center")
+            p(ng-if="item.logSuccessCount == item.logTotalCount" md-colors="{color: 'green'}") SUCCESS
+            p(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount > 0") FATAL
+            p(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount > 0") ERROR
+            p(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount > 0") WARNING
+            p(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount == 0 && item.logDebugsCount > 0") DEBUG
+            span
+              md-icon(ng-if="item.logSuccessCount == item.logTotalCount" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'green'}" style="padding-left: 5px;") done
+              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") cancel
+              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") error
+              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'orange'}" style="padding-left: 5px;") warning
+              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount == 0 && item.logDebugsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'indigo'}" style="padding-left: 5px;") bug report
+          div(layout="column")
+            p Started at: {{item.startedAt}}
+            p Ended at: {{item.endedAt}}
+          md-divider
+    div(layout="row" layout-align="center center" ng-show="isLoading")
+      div(layout="column")
+        h3 Loading data...
+        md-progress-circular(md-mode="indeterminate" md-diameter="96")
+
+    div(flex layout="row" layout-align="center center" ng-if="sessions && sessions.length>0")
+      p Number of log sessions found: {{sessions.length}}

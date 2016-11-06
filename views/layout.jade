@@ -4,6 +4,7 @@ html(ng-app="LinkerSyncMonitor")
         title= title
         link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='stylesheet', href="https://fonts.googleapis.com/icon?family=Material+Icons")
     body(ng-controller='MainCtrl')
         md-toolbar(md-scroll-shrink layout="row" layout-align="left center" md-colors="{background: 'blue-grey-50'}" class='toolbar')
             img(id='logo-image', src='/images/logo.png' width=35)
@@ -11,7 +12,7 @@ html(ng-app="LinkerSyncMonitor")
         md-nav-bar(md-selected-nav-item="selectedMenuItem", nav-bar-aria-label="navigation links")
             md-nav-item(md-nav-click="goto('dashboard')", name="dashboard" md-colors="{color: 'primary'}") Dashboard
             //md-nav-item(md-nav-click="goto('charts')", name="charts", disable="1") Charts
-        md-content(flex, class='content')
+        div(flex, class='content')
             block content
 
         script(src='/modules/jquery/dist/jquery.js')

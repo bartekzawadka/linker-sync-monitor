@@ -9,7 +9,7 @@ angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($sco
         url: '/api/getSessions',
         method: 'GET'
     }).then(function(response){
-        $scope.sessions = response.data.rows;
+        $scope.sessions = response.data;
         $scope.isLoading = false;
     }, function(e){
         console.log(e);
