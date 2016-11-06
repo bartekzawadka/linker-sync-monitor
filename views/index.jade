@@ -1,5 +1,12 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  div(ng-controller="SessionsListCtrl")
+    md-list(flex)
+      md-list-item(class="md-3-line" ng-repeat="item in sessions" ng-click="null")
+        div(class="md-list-item-text" layout="column")
+          h3 Status: UNKNOWN
+          p Started at: {{item.startedAt}}
+          p Ended at: {{item.endedAt}}
+    div(layout="row" layout-align="center center")
+      md-progress-circular(ng-show="isLoading" md-mode="indeterminate" md-diameter="96")
