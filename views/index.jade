@@ -16,7 +16,7 @@ block content
               md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") cancel
               md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") error
               md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'orange'}" style="padding-left: 5px;") warning
-              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount == 0 && item.logDebugsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'indigo'}" style="padding-left: 5px;") bug report
+              md-icon(ng-if="item.logSuccessCount != item.logTotalCount && item.logFatalsCount == 0 && item.logErrorsCount == 0 && item.logWarningsCount == 0 && item.logDebugsCount > 0" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'indigo'}" style="padding-left: 5px;") build
           div(layout="column")
             p Started at: {{item.startedAt}}
             p Ended at: {{item.endedAt}}
@@ -34,25 +34,32 @@ block content
 
     md-dialog(aria-label="Sync session details" class="fullscreen-dialog")
       form(ng-cloak)
-        md-toolbar
+        md-toolbar(md-colors="{background: 'blue-grey-50', color: 'grey'}")
           div(class="md-toolbar-tools")
             h2 Synchronization session details
             span(flex)
             md-button(class="md-icon-button" ng-click="close()")
-              md-icon(md-font-library="material-icons") close
+              md-icon(md-font-library="material-icons" md-colors="{color: 'grey'}") close
         md-dialog-content
-          .md-dialog-content
+          .md-dialog-content(id="session-info-md-dialog-content")
             md-list(flex)
               md-list-item(class="md-3-line" ng-repeat="item in logs" flex)
                 div(class="md-list-item-text" layout="column")
-                  h3 {{item.type}}
-                  h4 {{item.message}}
-                  p(ng-if="item.description") {{item.description}}
+                  h4(md-colors="{color: 'blue-grey'}") {{item.type}} ({{item.createdAt}})
+                  h4(md-colors="{color: '{{getColorForLevel(item.level)}}'}") {{item.message}}
+                  p(ng-if="item.description", md-colors="{color: '{{getColorForLevel(item.level)}}'}") {{item.description}}
                 div(class="md-secondary" layout="row" layout-align="center center")
-                  h5 {{item.level}}
+                  p(md-colors="{color: '{{getColorForLevel(item.level)}}'}") {{item.level}}
+                  span
+                    md-icon(md-font-library="material-icons" class="md-secondary" ng-style="{color: getColorForLevel(item.level)}" style="padding-left: 5px;") {{getIconForLevel(item.level)}}
                 md-divider
 
             div(layout="row" layout-align="center center" ng-show="isLoading")
               div(layout="column")
                 h3 Loading data...
                 md-progress-circular(md-mode="indeterminate" md-diameter="96")
+        md-divider
+        md-dialog-actions
+          span(flex)
+          md-button(ng-click="close()") Close
+          span(flex)
