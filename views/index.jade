@@ -3,7 +3,7 @@ extends layout
 block content
   div(ng-controller="SessionsListCtrl")
     md-list
-      md-list-item(class="md-3-line" ng-repeat="item in sessions" ng-click="null")
+      md-list-item(class="md-3-line" ng-repeat="item in sessions" ng-click="showSessionInfo(item.id)")
         div(class="md-list-item-text" layout="column")
           div(class="md-secondary" layout="row" layout-align="center center")
             p(ng-if="item.logSuccessCount == item.logTotalCount" md-colors="{color: 'green'}") SUCCESS
@@ -28,3 +28,31 @@ block content
 
     div(flex layout="row" layout-align="center center" ng-if="sessions && sessions.length>0")
       p Number of log sessions found: {{sessions.length}}
+
+
+  script(type="text/ng-template" id="session-info-dialog.tmpl.html")
+
+    md-dialog(aria-label="Sync session details" class="fullscreen-dialog")
+      form(ng-cloak)
+        md-toolbar
+          div(class="md-toolbar-tools")
+            h2 Synchronization session details
+            span(flex)
+            md-button(class="md-icon-button" ng-click="close()")
+              md-icon(md-font-library="material-icons") close
+        md-dialog-content
+          .md-dialog-content
+            md-list(flex)
+              md-list-item(class="md-3-line" ng-repeat="item in logs" flex)
+                div(class="md-list-item-text" layout="column")
+                  h3 {{item.type}}
+                  h4 {{item.message}}
+                  p(ng-if="item.description") {{item.description}}
+                div(class="md-secondary" layout="row" layout-align="center center")
+                  h5 {{item.level}}
+                md-divider
+
+            div(layout="row" layout-align="center center" ng-show="isLoading")
+              div(layout="column")
+                h3 Loading data...
+                md-progress-circular(md-mode="indeterminate" md-diameter="96")

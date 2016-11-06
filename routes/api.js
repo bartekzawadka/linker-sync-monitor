@@ -38,8 +38,8 @@ router.get('/getSessions', function(req, res){
                 sequelize.literal('(SELECT count(\"logs\".\"id\") FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
                 'logTotalCount'
             ],
-            [sequelize.fn('to_char', sequelize.col("session.\"startedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'startedAt'],
-            [sequelize.fn('to_char', sequelize.col("session.\"endedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'endedAt'],
+            [sequelize.fn('to_char', sequelize.col("session.\"startedAt\""), "YYYY-MM-DD HH24:MI:SS"), 'startedAt'],
+            [sequelize.fn('to_char', sequelize.col("session.\"endedAt\""), "YYYY-MM-DD HH24:MI:SS"), 'endedAt'],
             "\"updatedAt\""],
         include:{
             model: models.log,
@@ -67,6 +67,33 @@ router.get('/getSessions', function(req, res){
     }).catch(function(e){
         console.log(e);
     });
+});
+
+router.get('/getLogs/:id', function(req, res){
+    if(!req.params || !req.params.id){
+        res.writeHead(500, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({
+            "error": "No session id provided"
+        }));
+        return;
+    }
+
+    models.log.findAll({
+        where: {
+            "sessionId": req.params.id
+        },
+        order: [
+            ["\"updatedAt\"", "DESC"]
+        ],
+        attributes:['id', 'level', 'type', 'message', 'description', 'sessionId',
+            [sequelize.fn('to_char', sequelize.col("log.\"createdAt\""), "YYYY-MM-DD HH24:MI:SS"), 'createdAt'],
+        ]
+    }).then(function(results){
+        res.writeHead(200, {"Content-Type": "application/json"});
+        res.end(JSON.stringify(results));
+    }).catch(function(e){
+        console.log(e);
+    })
 });
 
 module.exports = router;

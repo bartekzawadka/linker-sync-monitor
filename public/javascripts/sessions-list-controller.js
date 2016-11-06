@@ -1,7 +1,7 @@
 /**
  * Created by barte_000 on 2016-11-06.
  */
-angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($scope, $http){
+angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($scope, $http, $mdDialog){
     $scope.isLoading = true;
     $scope.sessions = [];
 
@@ -15,5 +15,16 @@ angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($sco
         console.log(e);
         $scope.isLoading = false;
     });
+
+    $scope.showSessionInfo = function(sessionId, ev){
+        $mdDialog.show({
+            locals: {data: sessionId},
+            controller: 'SessionInfoCtrl',
+            templateUrl: 'session-info-dialog.tmpl.html',
+            parent: angular.element(document.body),
+            targetEvent: ev,
+            clickOutsideToClose: false
+        });
+    };
 
 });
