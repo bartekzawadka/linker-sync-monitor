@@ -12,22 +12,43 @@ var sequelize = require('sequelize');
 router.get('/getSessions', function(req, res){
 
     var query = {
+
+        attributes: ['id',
+            [
+                sequelize.literal('(SELECT count(case when \"logs\".\"level\" = \'ERROR\' then 1 else NULL end) FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logErrorsCount'
+            ],
+            [
+                sequelize.literal('(SELECT count(case when \"logs\".\"level\" = \'FATAL\' then 1 else NULL end) FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logFatalsCount'
+            ],
+            [
+                sequelize.literal('(SELECT count(case when \"logs\".\"level\" = \'WARNING\' then 1 else NULL end) FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logWarningsCount'
+            ],
+            [
+                sequelize.literal('(SELECT count(case when \"logs\".\"level\" = \'DEBUG\' then 1 else NULL end) FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logDebugsCount'
+            ],
+            [
+                sequelize.literal('(SELECT count(case when \"logs\".\"level\" = \'INFO\' then 1 else NULL end) FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logSuccessCount'
+            ],
+            [
+                sequelize.literal('(SELECT count(\"logs\".\"id\") FROM \"logs\" WHERE \"logs\".\"sessionId\" = \"session\".\"id\")'),
+                'logTotalCount'
+            ],
+            [sequelize.fn('to_char', sequelize.col("session.\"startedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'startedAt'],
+            [sequelize.fn('to_char', sequelize.col("session.\"endedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'endedAt'],
+            "\"updatedAt\""],
         include:{
             model: models.log,
-            attributes: ['id', 'level', 'type','message',
-                [sequelize.fn('to_char', sequelize.col("logs.\"updatedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'updatedAtFormed']]
+            attributes:[]
         },
         offset: 0,
         limit: config.defaultDataLimit,
         order: [
-            ["\"updatedAt\"", "DESC"],
-            [models.log, 'id', 'ASC']
-        ],
-        attributes: [
-            'id',
-            [sequelize.fn('to_char', sequelize.col("session.\"startedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'startedAtFormed'],
-            [sequelize.fn('to_char', sequelize.col("session.\"endedAt\""), "YYYY-MM-DD HH12:MI:SS"), 'endedAtFormed'],
-            "\"updatedAt\""
+            ["\"updatedAt\"", "DESC"]
         ]
     };
 
@@ -38,7 +59,7 @@ router.get('/getSessions', function(req, res){
         }
     }
 
-    models.session.findAndCountAll(query).then(function(results){
+    models.session.findAll(query).then(function(results){
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(results));
     }).catch(function(e){
