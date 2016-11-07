@@ -60,10 +60,8 @@ router.get('/getSessions', function(req, res){
     }
 
     models.session.findAll(query).then(function(results){
-        setTimeout(function(){
         res.writeHead(200, {"Content-Type": "application/json"});
         res.end(JSON.stringify(results));
-    }, 1000);
     }).catch(function(e){
         console.log(e);
     });
