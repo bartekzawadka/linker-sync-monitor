@@ -54,9 +54,9 @@ router.get('/getSessions', function(req, res){
 
     if(req.query.pageSize){
         query.limit = req.query.pageSize;
-        if(req.query.pageIndex){
-            query.offset = req.query.pageIndex * req.query.pageSize;
-        }
+    }
+    if(req.query.pageIndex){
+        query.offset = req.query.pageIndex;
     }
 
     models.session.findAll(query).then(function(results){
