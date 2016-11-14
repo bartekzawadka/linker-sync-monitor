@@ -9,9 +9,51 @@ html(ng-app="LinkerSyncMonitor")
         md-toolbar(md-scroll-shrink layout="row" layout-align="left center" md-colors="{background: 'blue-grey-50'}" class='toolbar')
             img(id='logo-image', src='/images/logo.png' width=35)
             .logo Linker sync log viewer
-        md-nav-bar(md-selected-nav-item="selectedMenuItem", nav-bar-aria-label="navigation links")
-            md-nav-item(md-nav-click="goto('dashboard')", name="dashboard" md-colors="{color: 'primary'}") Dashboard
-            //md-nav-item(md-nav-click="goto('charts')", name="charts", disable="1") Charts
+
+        // Filter navbar:
+        md-card(class="filtering-toolbar")
+            md-toolbar(md-colors="{background: 'indigo-200'}")
+                .md-toolbar-tools
+                    span(style="color: white !important; font-size: 18px;") Filter & sort
+                    span(flex)
+                    md-button(class="md-icon-button")
+                        md-icon(md-font-library="material-icons" ng-click="toggleFilteringMenu()") menu
+
+            div(ng-if="isFilteringVisible")
+                md-card-content(flex layout-padding)
+                    div(layout-gt-xs="row" layout="row" layout-align="start start")
+                        md-input-container
+                            label Started at
+                            md-datepicker(ng-model="user.submissionDate")
+                        md-input-container
+                            label Ended at
+                            md-datepicker(ng-model="user.submissionDate")
+                        md-list
+                            md-subheader(class="md-no-sticky") Levels
+                            md-list-item(ng-repeat="level in levels")
+                                md-checkbox(ng-model="level.checked")
+                                p {{level.name}}
+                        md-input-container
+                            md-checkbox(ng-model="processedAnyItem") Was any item processed
+                        div(layout="column")
+                            div
+                                md-input-container
+                                    md-switch(ng-model="descending") Order by descending
+                                md-input-container
+                                    span Order by date:
+                                    md-radio-group(ng-model="orderDate")
+                                        md-radio-button(class="md-primary", value="startedAt") Stated at
+                                        md-radio-button(class="md-primary", value="endedAt") Ended at
+
+
+                md-card-actions(layout="row" layout-align="center center")
+                    md-button(class="md-raised")
+                        md-icon(md-font-library="material-icons") clear
+                        span Clear
+                    md-button(class="md-raised md-primary")
+                        md-icon(md-font-library="material-icons") done
+                        span Apply
+
         div(flex, class='content')
             block content
 
