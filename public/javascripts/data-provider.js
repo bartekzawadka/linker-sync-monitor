@@ -5,7 +5,7 @@ angular.module('LinkerSyncMonitor')
 
 .factory('DataProvider', function ($http) {
     return {
-        getSessions: function(pageIndex, callback){
+        getSessions: function(pageIndex, filter, callback){
             if(!pageIndex)
                 pageIndex = 0;
 
@@ -14,10 +14,17 @@ angular.module('LinkerSyncMonitor')
                 error: null
             };
 
-            $http({
+            var request = {
                 url: '/api/sessions?pageIndex='+pageIndex,
-                method: 'GET'
-            }).then(function(response){
+                method: 'POST'
+            };
+
+            if(filter){
+                request.data = filter;
+                request.headers = {'Content-Type': 'application/json'};
+            }
+
+            $http(request).then(function(response){
                 if(response.data) {
                     result.data = response.data;
                 }

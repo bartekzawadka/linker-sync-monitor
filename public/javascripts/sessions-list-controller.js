@@ -6,10 +6,16 @@ angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($sco
     $scope.sessions = [];
     var moreDataAvailable = true;
 
-    var getSessions = function(){
+    $scope.$on('filterUpdated', function(e, data){
+        $scope.sessions = [];
+        moreDataAvailable = true;
+        getSessions(data);
+    });
+
+    var getSessions = function(filter){
         $scope.isLoading = true;
 
-        DataProvider.getSessions($scope.sessions.length, function(result){
+        DataProvider.getSessions($scope.sessions.length, filter, function(result){
            if(result.error) {
                console.log(result.error);
                $scope.isLoading = false;

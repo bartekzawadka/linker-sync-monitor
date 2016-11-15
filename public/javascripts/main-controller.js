@@ -17,7 +17,7 @@ angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
                     {name: "FATAL", checked: false}
                 ],
                 ordering: {
-                    descending: false,
+                    descending: true,
                     value: "endedAt"
                 },
                 startedAt: null,
@@ -34,5 +34,40 @@ angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
 
     $scope.toggleFilteringMenu = function(){
         $scope.filter.isVisible = !$scope.filter.isVisible;
+    };
+
+    var convertFilter = function(){
+        var data = {
+            filter: {},
+            order: $scope.filter.values.ordering
+        };
+
+        if($scope.filter.values.processedAnyItem && $scope.filter.values.processedAnyItem != "all"){
+            if($scope.filter.values.processedAnyItem == "yes")
+                data.filter.hasProcessedItems = true;
+            else
+                data.filter.hasProcessedItems = false;
+        }
+        for(var k in $scope.filter.values.levels){
+            if($scope.filter.values.levels.hasOwnProperty(k)){
+                if($scope.filter.values.levels[k].checked){
+                    if(!data.filter.levels)
+                        data.filter.levels = [];
+                    data.filter.levels.push($scope.filter.values.levels[k].name);
+                }
+            }
+        }
+
+        if($scope.filter.values.startedAt)
+            data.filter.startedAt = $scope.filter.values.startedAt;
+        if($scope.filter.values.endedAt)
+            data.filter.endedAt = $scope.filter.values.endedAt;
+        return data;
+    };
+
+    $scope.applyFilter = function(){
+        var filter = convertFilter();
+        $scope.$broadcast('filterUpdated', filter);
+        $scope.filter.isVisible = false;
     }
 });
