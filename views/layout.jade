@@ -14,40 +14,43 @@ html(ng-app="LinkerSyncMonitor")
         md-card(class="filtering-toolbar")
             md-toolbar(md-colors="{background: 'indigo-200'}")
                 .md-toolbar-tools
-                    span(style="color: white !important; font-size: 18px;") Filter & sort
+                    span(class="filtering-toolbar-heading") Filter & sort
                     span(flex)
                     md-button(class="md-icon-button")
                         md-icon(md-font-library="material-icons" ng-click="toggleFilteringMenu()") menu
 
-            div(ng-if="isFilteringVisible")
+            div(ng-if="filter.isVisible")
                 md-card-content(flex layout-padding)
                     div(layout-gt-xs="row" layout="row" layout-align="start start")
                         md-input-container
                             label Started at
-                            md-datepicker(ng-model="user.submissionDate")
+                            md-datepicker(ng-model="filter.values.startedAt" class="md-warn")
                         md-input-container
                             label Ended at
-                            md-datepicker(ng-model="user.submissionDate")
+                            md-datepicker(ng-model="filter.values.endedAt" class="md-warn")
                         md-list
-                            md-subheader(class="md-no-sticky") Levels
-                            md-list-item(ng-repeat="level in levels")
-                                md-checkbox(ng-model="level.checked")
-                                p {{level.name}}
+                            md-subheader(class="md-no-sticky") Levels:
+                            md-list-item(ng-repeat="level in filter.values.levels")
+                                md-checkbox(ng-model="level.checked" class="md-warn")
+                                span {{level.name}}
                         md-input-container
-                            md-checkbox(ng-model="processedAnyItem") Was any item processed
-                        div(layout="column")
-                            div
-                                md-input-container
-                                    md-switch(ng-model="descending") Order by descending
-                                md-input-container
-                                    span Order by date:
-                                    md-radio-group(ng-model="orderDate")
-                                        md-radio-button(class="md-primary", value="startedAt") Stated at
-                                        md-radio-button(class="md-primary", value="endedAt") Ended at
+                            div(class="heading") Was any item processed:
+                            md-radio-group(ng-model="filter.values.processedAnyItem")
+                                md-radio-button(class="md-warn", value="all") Doesn't matter
+                                md-radio-button(class="md-warn", value="no") No
+                                md-radio-button(class="md-warn", value="yes") Yes
+                        span(flex)
+                        div(layout="column" layout-align="start start")
+                            md-input-container(layout="column" layout-align="start start")
+                                div(class="heading") Order by:
+                                md-radio-group(ng-model="filter.values.ordering.value")
+                                    md-radio-button(class="md-warn", value="startedAt") Stated at
+                                    md-radio-button(class="md-warn", value="endedAt") Ended at
+                            md-switch(ng-model="filter.values.ordering.descending" class="md-warn") Order by descending
 
 
                 md-card-actions(layout="row" layout-align="center center")
-                    md-button(class="md-raised")
+                    md-button(class="md-raised" ng-click="setDefaultFilter(filter.isVisible)")
                         md-icon(md-font-library="material-icons") clear
                         span Clear
                     md-button(class="md-raised md-primary")

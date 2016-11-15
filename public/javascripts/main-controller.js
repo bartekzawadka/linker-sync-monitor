@@ -3,21 +3,36 @@
  */
 angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
     $scope.selectedMenuItem = 'dashboard';
-    $scope.currentLevel = null;
-    $scope.processedAnyItem = false;
-    $scope.descending = false;
-    $scope.orderDate = "endedAt";
-    $scope.levels = [
-        {name: "INFO", checked: false},
-        {name: "WARNING", checked: false},
-        {name: "DEBUG", checked: false},
-        {name: "ERROR", checked: false},
-        {name: "FATAL", checked: false}
-    ];
 
-    $scope.isFilteringVisible = false;
+    $scope.setDefaultFilter = function(visible){
+        var filter = {
+            isVisible: false,
+            values: {
+                processedAnyItem: "all",
+                levels: [
+                    {name: "INFO", checked: false},
+                    {name: "WARNING", checked: false},
+                    {name: "DEBUG", checked: false},
+                    {name: "ERROR", checked: false},
+                    {name: "FATAL", checked: false}
+                ],
+                ordering: {
+                    descending: false,
+                    value: "endedAt"
+                },
+                startedAt: null,
+                endedAt: null
+            }
+        };
+        if(visible)
+            filter.isVisible = visible;
+
+        $scope.filter = filter;
+    };
+
+    $scope.setDefaultFilter(false);
 
     $scope.toggleFilteringMenu = function(){
-        $scope.isFilteringVisible = !$scope.isFilteringVisible;
+        $scope.filter.isVisible = !$scope.filter.isVisible;
     }
 });
