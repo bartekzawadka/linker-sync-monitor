@@ -22,12 +22,21 @@ html(ng-app="LinkerSyncMonitor")
             div(ng-if="filter.isVisible")
                 md-card-content(flex layout-padding)
                     div(layout-gt-xs="row" layout="row" layout-align="start start")
-                        md-input-container
-                            label Started at
-                            md-datepicker(ng-model="filter.values.startedAt" class="md-warn")
-                        md-input-container
-                            label Ended at
-                            md-datepicker(ng-model="filter.values.endedAt" class="md-warn")
+                        div(layout="column")
+                            div(layout="row")
+                                md-input-container
+                                    label Started at from
+                                    md-datepicker(ng-model="filter.values.startedAt.from" class="md-warn")
+                                md-input-container
+                                    label Started at to
+                                    md-datepicker(ng-model="filter.values.startedAt.to" class="md-warn")
+                            div(layout="row")
+                                md-input-container(class="pad-vert-none")
+                                    label Ended at from
+                                    md-datepicker(ng-model="filter.values.endedAt.from" class="md-warn")
+                                md-input-container(class="pad-vert-none")
+                                    label Ended at to
+                                    md-datepicker(ng-model="filter.values.endedAt.to" class="md-warn")
                         md-list
                             md-subheader(class="md-no-sticky") Levels:
                             md-list-item(ng-repeat="level in filter.values.levels")

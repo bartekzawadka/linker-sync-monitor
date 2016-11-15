@@ -20,8 +20,14 @@ angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
                     descending: true,
                     value: "endedAt"
                 },
-                startedAt: null,
-                endedAt: null
+                startedAt: {
+                    from: null,
+                    to: null
+                },
+                endedAt: {
+                    from: null,
+                    to: null
+                }
             }
         };
         if(visible)
@@ -58,9 +64,9 @@ angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
             }
         }
 
-        if($scope.filter.values.startedAt)
+        if($scope.filter.values.startedAt && ($scope.filter.values.startedAt.from || $scope.filter.values.startedAt.to))
             data.filter.startedAt = $scope.filter.values.startedAt;
-        if($scope.filter.values.endedAt)
+        if($scope.filter.values.endedAt && ($scope.filter.values.endedAt.from || $scope.filter.values.endedAt.to))
             data.filter.endedAt = $scope.filter.values.endedAt;
         return data;
     };

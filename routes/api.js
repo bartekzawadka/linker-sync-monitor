@@ -53,19 +53,31 @@ router.post('/sessions', function (req, res) {
                 var where = {
                     "$and": []
                 };
-                if (filter.filter.startedAt) {
-                    where["$and"].push({
-                        "\"startedAt\"": {
-                            "$gte": filter.filter.startedAt
-                        }
-                    });
+                if (filter.filter.startedAt && (filter.filter.startedAt.from || filter.filter.startedAt.to)) {
+                    var start = {
+                        "\"startedAt\"": {}
+                    };
+                    if(filter.filter.startedAt.from){
+                        start["\"startedAt\""]["$gte"] = filter.filter.startedAt.from;
+                    }
+                    if(filter.filter.startedAt.to){
+                        start["\"startedAt\""]["$lte"] = filter.filter.startedAt.to;
+                    }
+
+                    where["$and"].push(start);
                 }
-                if (filter.filter.endedAt) {
-                    where["$and"].push({
-                        "\"endedAt\"": {
-                            "$gte": filter.filter.endedAt
-                        }
-                    });
+                if (filter.filter.endedAt && (filter.filter.endedAt.from || filter.filter.endedAt.to)) {
+                    var end = {
+                        "\"endedAt\"": {}
+                    };
+                    if(filter.filter.endedAt.from){
+                        end["\"endedAt\""]["$gte"] = filter.filter.endedAt.from;
+                    }
+                    if(filter.filter.endedAt.to){
+                        end["\"endedAt\""]["$lte"] = filter.filter.endedAt.to;
+                    }
+
+                    where["$and"].push(end);
                 }
                 if (filter.filter.levels && filter.filter.levels.length > 0) {
                     where["$and"].push({
