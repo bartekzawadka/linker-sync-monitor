@@ -9,7 +9,7 @@ var models = require(path.join(__dirname, '..', 'models'));
 var config = require(path.join(__dirname, '..', 'config.json'));
 var sequelize = require('sequelize');
 
-router.get('/getSessions', function(req, res){
+router.get('/sessions', function(req, res){
 
     var query = {
 
@@ -67,7 +67,7 @@ router.get('/getSessions', function(req, res){
     });
 });
 
-router.get('/getLogs/:id', function(req, res){
+router.get('/logs/:id', function(req, res){
     if(!req.params || !req.params.id){
         res.writeHead(500, {"Content-Type": "application/json"});
         res.end(JSON.stringify({

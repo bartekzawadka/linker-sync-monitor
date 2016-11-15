@@ -1,28 +1,29 @@
 /**
  * Created by barte_000 on 2016-11-06.
  */
-angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($scope, $http, $mdDialog){
+angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($scope, $mdDialog, DataProvider){
     $scope.isLoading = true;
     $scope.sessions = [];
     var moreDataAvailable = true;
 
     var getSessions = function(){
         $scope.isLoading = true;
-        $http({
-            url: '/api/getSessions?pageIndex='+$scope.sessions.length,
-            method: 'GET'
-        }).then(function(response){
-            if(response.data) {
-                if(response.data.length>0) {
-                    moreDataAvailable = true;
-                    $scope.sessions = $scope.sessions.concat(response.data);
-                }else {
-                    moreDataAvailable = false;
-                }
+
+        DataProvider.getSessions($scope.sessions.length, function(result){
+           if(result.error) {
+               console.log(result.error);
+               $scope.isLoading = false;
+               return;
+           }
+
+            if(result.data){
+               if(result.data.length>0){
+                   moreDataAvailable = true;
+                   $scope.sessions = $scope.sessions.concat(result.data);
+               }else{
+                   moreDataAvailable = false;
+               }
             }
-            $scope.isLoading = false;
-        }, function(e){
-            console.log(e);
             $scope.isLoading = false;
         });
     };
