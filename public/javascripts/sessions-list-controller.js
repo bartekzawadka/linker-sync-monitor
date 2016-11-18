@@ -6,13 +6,68 @@ angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($sco
     $scope.sessions = [];
     var moreDataAvailable = true;
 
+    var filter = null;
+
     $scope.$on('filterUpdated', function(e, data){
         $scope.sessions = [];
         moreDataAvailable = true;
-        getSessions(data);
+        filter = data;
+        getSessions();
     });
 
-    var getSessions = function(filter){
+    var getSessionDisplayInfo = function(session){
+        if(!session)
+            return null;
+        var result = {
+            startedAt: session.startedAt,
+            endedAt: session.endedAt
+        };
+
+        result.label = session.level;
+        result.id = session.id;
+
+        if(!session.level || session.level == ""){
+            result.label = "UNKNOWN";
+            result.icon = "help";
+            result.color = "grey-600";
+        }else if (session.level == "INFO") {
+            result.label = "SUCCESS";
+            result.icon = "done";
+            result.color = "green";
+        }else if(session.level == "FATAL"){
+            result.icon = "cancel";
+            result.color = "red";
+        }else if(session.level == "ERROR"){
+            result.icon = "error";
+            result.color = "red";
+        }else if(session.level == "WARNING"){
+            result.icon = "warning";
+            result.color = "orange";
+        }else if(session.level == "DEBUG"){
+            result.icon = "build";
+            result.color = "indigo";
+        }
+
+        return result;
+    };
+
+    var reformatSessionsInfo = function(data){
+        if(!data)
+            return;
+
+        var formatted = [];
+        for(var k in data){
+            if(data.hasOwnProperty(k)){
+                var item = getSessionDisplayInfo(data[k]);
+                if(item)
+                    formatted.push(item);
+            }
+        }
+
+        return formatted;
+    };
+
+    var getSessions = function(){
         $scope.isLoading = true;
 
         DataProvider.getSessions($scope.sessions.length, filter, function(result){
@@ -25,7 +80,9 @@ angular.module('LinkerSyncMonitor').controller('SessionsListCtrl', function($sco
             if(result.data){
                if(result.data.length>0){
                    moreDataAvailable = true;
-                   $scope.sessions = $scope.sessions.concat(result.data);
+                   var formatted = reformatSessionsInfo(result.data);
+                   if(formatted)
+                        $scope.sessions = $scope.sessions.concat(formatted);
                }else{
                    moreDataAvailable = false;
                }

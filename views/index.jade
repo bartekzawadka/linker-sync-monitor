@@ -6,17 +6,9 @@ block content
       md-list-item(class="md-3-line" ng-repeat="item in sessions" ng-click="showSessionInfo(item.id)")
         div(class="md-list-item-text" layout="column")
           div(class="md-secondary" layout="row" layout-align="center center")
-            p(ng-if="item.level == 'INFO'" md-colors="{color: 'green'}") SUCCESS
-            p(ng-if="item.level == 'FATAL'" md-colors="{color: 'red'}") FATAL
-            p(ng-if="item.level == 'ERROR'" md-colors="{color: 'red'}") ERROR
-            p(ng-if="item.level == 'WARNING'" md-colors="{color: 'orange'}") WARNING
-            p(ng-if="item.level == 'DEBUG'" md-colors="{color: 'indigo'}") DEBUG
+            p(md-colors="{color: item.color}") {{item.label}}
             span
-              md-icon(ng-if="item.level == 'INFO'" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'green'}" style="padding-left: 5px;") done
-              md-icon(ng-if="item.level == 'FATAL'" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") cancel
-              md-icon(ng-if="item.level == 'ERROR'" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'red'}" style="padding-left: 5px;") error
-              md-icon(ng-if="item.level == 'WARNING'" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'orange'}" style="padding-left: 5px;") warning
-              md-icon(ng-if="item.level == 'DEBUG'" md-font-library="material-icons" class="md-secondary" ng-style="{color: 'indigo'}" style="padding-left: 5px;") build
+              md-icon(md-font-library="material-icons" class="md-secondary" ng-style="{color: item.color}" style="padding-left: 5px;") {{item.icon}}
           div(layout="column")
             p Started at: {{item.startedAt}}
             p Ended at: {{item.endedAt}}
