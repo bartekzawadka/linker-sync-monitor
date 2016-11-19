@@ -1,73 +1,77 @@
 doctype html
 html(ng-app="LinkerSyncMonitor")
     head
-        title= title
+        title Logs viewer
         link(rel='stylesheet', href='/modules/angular-material/angular-material.min.css')
         link(rel='stylesheet', href='/stylesheets/style.css')
         link(rel='stylesheet', href="https://fonts.googleapis.com/icon?family=Material+Icons")
     body(ng-controller='MainCtrl')
-        md-toolbar(md-scroll-shrink layout="row" layout-align="left center" md-colors="{background: 'blue-grey-50'}" class='toolbar')
-            img(id='logo-image', src='/images/logo.png' width=35)
-            .logo Linker sync log viewer
 
-        // Filter navbar:
-        md-card(class="filtering-toolbar")
-            md-toolbar(md-colors="{background: 'indigo-200'}")
-                .md-toolbar-tools
-                    span(class="filtering-toolbar-heading") Filter & sort
-                    span(flex)
-                    md-button(class="md-icon-button")
-                        md-icon(md-font-library="material-icons" ng-click="toggleFilteringMenu()") menu
+        div(id="loader" layout="row" layout-align="center center")
+            md-progress-circular(md-mode="indeterminate" md-diameter="96")
 
-            div(ng-if="filter.isVisible")
-                md-card-content(flex layout-padding)
-                    div(layout-gt-xs="row" layout="row" layout-align="start start")
-                        div(layout="column")
-                            div(layout="row")
-                                md-input-container
-                                    label Started at from
-                                    md-datepicker(ng-model="filter.values.startedAt.from" class="md-warn")
-                                md-input-container
-                                    label Started at to
-                                    md-datepicker(ng-model="filter.values.startedAt.to" class="md-warn")
-                            div(layout="row")
-                                md-input-container(class="pad-vert-none")
-                                    label Ended at from
-                                    md-datepicker(ng-model="filter.values.endedAt.from" class="md-warn")
-                                md-input-container(class="pad-vert-none")
-                                    label Ended at to
-                                    md-datepicker(ng-model="filter.values.endedAt.to" class="md-warn")
-                        md-list
-                            md-subheader(class="md-no-sticky") Levels:
-                            md-list-item(ng-repeat="level in filter.values.levels")
-                                md-checkbox(ng-model="level.checked" class="md-warn")
-                                span {{level.name}}
-                        md-input-container
-                            div(class="heading") Was any item processed:
-                            md-radio-group(ng-model="filter.values.processedAnyItem")
-                                md-radio-button(class="md-warn", value="all") Doesn't matter
-                                md-radio-button(class="md-warn", value="no") No
-                                md-radio-button(class="md-warn", value="yes") Yes
+        div(id="main")
+            md-toolbar(md-scroll-shrink layout="row" layout-align="left center" md-colors="{background: 'blue-grey-50'}" class='toolbar')
+                img(id='logo-image', src='/images/logo.png' width=35)
+                .logo Linker sync log viewer
+            // Filter navbar:
+            md-card(class="filtering-toolbar")
+                md-toolbar(md-colors="{background: 'indigo-200'}")
+                    .md-toolbar-tools
+                        span(class="filtering-toolbar-heading") Filter & sort
                         span(flex)
-                        div(layout="column" layout-align="start start")
-                            md-input-container(layout="column" layout-align="start start")
-                                div(class="heading") Order by:
-                                md-radio-group(ng-model="filter.values.ordering.value")
-                                    md-radio-button(class="md-warn", value="startedAt") Stated at
-                                    md-radio-button(class="md-warn", value="endedAt") Ended at
-                            md-switch(ng-model="filter.values.ordering.descending" class="md-warn") Order by descending
+                        md-button(class="md-icon-button")
+                            md-icon(md-font-library="material-icons" ng-click="toggleFilteringMenu()") menu
+
+                div(ng-if="filter.isVisible")
+                    md-card-content(flex layout-padding)
+                        div(layout-gt-xs="row" layout="row" layout-align="start start")
+                            div(layout="column")
+                                div(layout="row")
+                                    md-input-container
+                                        label Started at from
+                                        md-datepicker(ng-model="filter.values.startedAt.from" class="md-warn")
+                                    md-input-container
+                                        label Started at to
+                                        md-datepicker(ng-model="filter.values.startedAt.to" class="md-warn")
+                                div(layout="row")
+                                    md-input-container(class="pad-vert-none")
+                                        label Ended at from
+                                        md-datepicker(ng-model="filter.values.endedAt.from" class="md-warn")
+                                    md-input-container(class="pad-vert-none")
+                                        label Ended at to
+                                        md-datepicker(ng-model="filter.values.endedAt.to" class="md-warn")
+                            md-list
+                                md-subheader(class="md-no-sticky") Levels:
+                                md-list-item(ng-repeat="level in filter.values.levels")
+                                    md-checkbox(ng-model="level.checked" class="md-warn")
+                                    span {{level.name}}
+                            md-input-container
+                                div(class="heading") Was any item processed:
+                                md-radio-group(ng-model="filter.values.processedAnyItem")
+                                    md-radio-button(class="md-warn", value="all") Doesn't matter
+                                    md-radio-button(class="md-warn", value="no") No
+                                    md-radio-button(class="md-warn", value="yes") Yes
+                            span(flex)
+                            div(layout="column" layout-align="start start")
+                                md-input-container(layout="column" layout-align="start start")
+                                    div(class="heading") Sort by:
+                                    md-radio-group(ng-model="filter.values.ordering.value")
+                                        md-radio-button(class="md-warn", value="startedAt") Stated at
+                                        md-radio-button(class="md-warn", value="endedAt") Ended at
+                                md-switch(ng-model="filter.values.ordering.descending" class="md-warn") Sort by descending
 
 
-                md-card-actions(layout="row" layout-align="center center")
-                    md-button(class="md-raised" ng-click="setDefaultFilter(filter.isVisible)")
-                        md-icon(md-font-library="material-icons") clear
-                        span Clear
-                    md-button(class="md-raised md-primary" ng-click="applyFilter()")
-                        md-icon(md-font-library="material-icons") done
-                        span Apply
+                    md-card-actions(layout="row" layout-align="center center")
+                        md-button(class="md-raised" ng-click="setDefaultFilter(filter.isVisible)")
+                            md-icon(md-font-library="material-icons") clear
+                            span Clear
+                        md-button(class="md-raised md-primary" ng-click="applyFilter()")
+                            md-icon(md-font-library="material-icons") done
+                            span Apply
 
-        div(flex, class='content')
-            block content
+            div(flex, class='content')
+                block content
 
         script(src='/modules/jquery/dist/jquery.js')
         script(src='/modules/angular/angular.js')

@@ -4,6 +4,11 @@
 angular.module('LinkerSyncMonitor').controller('MainCtrl', function($scope){
     $scope.selectedMenuItem = 'dashboard';
 
+    $(document).ready(function() {
+        $('#loader').hide();
+        $('#main').show();
+    });
+
     $scope.setDefaultFilter = function(visible){
         var filter = {
             isVisible: false,
